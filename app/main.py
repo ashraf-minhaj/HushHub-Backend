@@ -24,7 +24,7 @@ logging.info("Getting env vars")
 load_dotenv()
 ENV         = os.getenv('ENV', 'dev')
 PORT        = int(os.getenv('PORT', 8080))
-DB_URL      = os.getenv('DB_URL', 'mongodb://dbuser:hardpass@localhost:27017/') # f"mongodb://{username}:{password}@host:port/"
+DB_URL      = os.getenv('DB_URL', 'mongodb://localhost:27017') # f"mongodb://{username}:{password}@host:port/"
 DEBUG       = False
 
 logging.info(ENV, PORT, DB_URL)
@@ -34,10 +34,17 @@ app = Flask(__name__)
 # connect to db
 try:
     db_client = pymongo.MongoClient(DB_URL)
+    # db = db_client.get_database()
+    mydb = db_client["dev"]
+    mycol = mydb["devCollection"]
+
+    mydict = { "message": "Allh" }
+
+    x = mycol.insert_one(mydict)
+
     if ENV == "dev":
         logging.info("dev env")
         DEBUG = True
-        mydb = db_client["mydatabase"]
 except Exception as e:
     logging.error(e)
 
@@ -48,24 +55,25 @@ def post_message():
     if not message:
         return jsonify({'error': 'Message is required'}), 400
 
-    # Store message in DynamoDB
-    response = table.put_item(Item={'message': message})
+    # Store message in db
+    result = mycol.insert_one({'message': message})
 
-    return jsonify({'success': True, 'message': message}), 201
+    return jsonify({'success': True, 'message_id': str(result.inserted_id)}), 201
 
 @app.route('/get_messages', methods=['GET'])
 def get_messages():
     # Retrieve messages from DynamoDB
-    response = table.scan()
-    messages = response.get('Items', [])
+    messages = list(mycol.find({}, {'_id': 0}))
+    print(messages)
 
     return jsonify({'messages': messages})
 
-@app.route('/databases', methods=['GET'])
+@app.route('/collections', methods=['GET'])
 def get_dbs():
     # print("hey man")
-    logging.info("getting list of databases")
-    return jsonify({'success': True, 'message': db_client.list_database_names()}), 200
+    logging.info("getting list of collections")
+    print(db_client.list_collection_names())
+    return jsonify({'success': True, 'message': db_client.list_collection_names()}), 200
 
 if __name__ == '__main__':
     app.run(debug=DEBUG, port=PORT)
