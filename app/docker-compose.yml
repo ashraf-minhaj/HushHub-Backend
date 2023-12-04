@@ -17,23 +17,31 @@ services:
     # environment:
     #   - MONGO_INITDB_ROOT_USERNAME=dbuser
     #   - MONGO_INITDB_ROOT_PASSWORD=hardpass
+    networks:
+      - hushhub_network
   
   mongo_seed:
     build: ../tools/seed
     container_name: local_seeder
     depends_on:
       - mongodb
+    networks:
+      - hushhub_network
 
-  # backend:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile  
-  #   container_name: backend
-  #   ports:
-  #     - "8080:5000"
-  #   depends_on:
-  #     - local_db
-  #   links:
-  #     - local_db
-  #   env_file:
-  #     - ./.env
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo_seed
+    env_file:
+      - ./.env
+    networks:
+      - hushhub_network
+
+networks:
+  hushhub_network:
+    driver: bridge
