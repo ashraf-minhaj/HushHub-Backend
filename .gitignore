@@ -2,3 +2,5 @@ app/*
 !app/*.yml
 !app/main.py
 !app/requirements.txt
+!app/Dockerfile
+.DS_Store
