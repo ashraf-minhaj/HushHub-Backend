@@ -4,7 +4,7 @@
     author: ashraf minhaj
     mail: ashraf_minhaj@yahoo.com
     
-    date: 02-12-2023
+    date: 04-12-2023
 
 Backend API
 """
@@ -12,60 +12,39 @@ Backend API
 
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
-import boto3
+import logging
+import pymongo
 import os
 
-load_dotenv()
-# Access environment variables with default values
-PORT    = int(os.getenv('PORT', 5000))
-DB_URL  = os.getenv('DB_URL', 'http://localhost:8000')
+logging.basicConfig(format='%(asctime)s %(message)s')
+logging.info("Getting env vars")
 
-print(PORT, DB_URL)
+# Load environment variables from .env file
+# Access environment variables with default values
+load_dotenv()
+ENV         = os.getenv('ENV', 'dev')
+PORT        = int(os.getenv('PORT', 8080))
+DB_URL      = os.getenv('DB_URL', 'mongodb://dbuser:hardpass@localhost:27017/') # f"mongodb://{username}:{password}@host:port/"
+DEBUG       = False
+
+logging.info(ENV, PORT, DB_URL)
 
 app = Flask(__name__)
 
-# DynamoDB configuration
-dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000')
-print(dynamodb)
-# table_name = 'HushHubMessages'
-# table = dynamodb.Table(table_name)
-table_name = 'messages'
+# connect to db
 try:
-    table = dynamodb.create_table(
-        TableName=table_name,
-        KeySchema=[
-            {
-                'AttributeName': 'message',
-                'KeyType': 'HASH'
-            },
-        ],
-        AttributeDefinitions=[
-            {
-                'AttributeName': 'message',
-                'AttributeType': 'S'
-            },
-        ],
-        ProvisionedThroughput={
-            'ReadCapacityUnits': 5,
-            'WriteCapacityUnits': 5
-        }
-    )
-except dynamodb.meta.client.exceptions.ResourceInUseException as e:
-    # Table already exists, so no need to create it again
-    table = dynamodb.Table(table_name)
-    print(table)
-    print("shit")
+    db_client = pymongo.MongoClient(DB_URL)
+    if ENV == "dev":
+        logging.info("dev env")
+        DEBUG = True
+        mydb = db_client["mydatabase"]
 except Exception as e:
-    # Handle other exceptions if needed
-    print(f"An error occurred: {e}")
+    logging.error(e)
 
 
 @app.route('/post_message', methods=['POST'])
 def post_message():
     message = request.args.get('message')
-    # data = request.json
-    # message = data.get('message')
-
     if not message:
         return jsonify({'error': 'Message is required'}), 400
 
@@ -82,5 +61,11 @@ def get_messages():
 
     return jsonify({'messages': messages})
 
+@app.route('/databases', methods=['GET'])
+def get_dbs():
+    # print("hey man")
+    logging.info("getting list of databases")
+    return jsonify({'success': True, 'message': db_client.list_database_names()}), 200
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=DEBUG, port=PORT)
