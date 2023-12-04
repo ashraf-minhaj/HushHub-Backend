@@ -1,24 +1,39 @@
+#########################################
+# author: ashraf minhaj
+# email : ashraf_minhaj@yahoo.com
+# 
+# date: 04-12-23
+# HushHub Backend local dev environment
+#########################################
+
 version: '3.8'
+
 services:
- dynamodb-local:
-   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-   image: "amazon/dynamodb-local:latest"
-   container_name: dynamodb-local
-   ports:
-     - "8000:8000"
-   volumes:
-     - "./docker/dynamodb:/home/dynamodblocal/data"
-   working_dir: /home/dynamodblocal
-#  app-node:
-#    image: location-of-your-dynamodb-demo-app:latest
-#    container_name: app-node
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - "dynamodb-local"
-#    links:
-#      - "dynamodb-local"
-#    environment:
-#      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
-#      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
-#      REGION: 'eu-west-1'
+  mongodb:
+    image: mongo
+    container_name: local_db
+    ports:
+      - "27017:27017"
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=dbuser
+    #   - MONGO_INITDB_ROOT_PASSWORD=hardpass
+  
+  mongo_seed:
+    build: ../tools/seed
+    container_name: local_seeder
+    depends_on:
+      - mongodb
+
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile  
+  #   container_name: backend
+  #   ports:
+  #     - "8080:5000"
+  #   depends_on:
+  #     - local_db
+  #   links:
+  #     - local_db
+  #   env_file:
+  #     - ./.env
