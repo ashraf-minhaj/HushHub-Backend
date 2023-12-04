@@ -9,6 +9,8 @@
 # FROM --platform=linux/amd64 python:3.10 as builder
 FROM python:3.10 as builder
 
+WORKDIR /app
+
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
@@ -23,6 +25,8 @@ COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/pytho
 
 COPY main.py .
 
+RUN useradd -m backend; chown backend:backend /app
+USER backend
 # ENV PORT=5000
 
 EXPOSE 5000
