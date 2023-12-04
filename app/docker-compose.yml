@@ -31,7 +31,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile  
+      dockerfile: Dockerfile.dev
     container_name: backend
     ports:
       - "8080:8080"
@@ -41,6 +41,8 @@ services:
       - ./.env
     networks:
       - hushhub_network
+    volumes:
+      - .:/app
 
 networks:
   hushhub_network:

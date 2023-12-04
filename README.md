@@ -5,6 +5,7 @@
 ![banner](docs/banner.png)
 
 ![](https://img.shields.io/badge/License-MIT%20License-red?style=plastic&logo=mit)&nbsp;
+![](https://img.shields.io/badge/Platform-Linux-black?labelColor=black&style=plastic&logo=linux)&nbsp;
 ![](https://img.shields.io/badge/Python-3.10-blue?style=plastic&logo=python)&nbsp;
 ![](https://img.shields.io/badge/docker--blue?style=plastic&logo=docker)&nbsp;
 ![](https://img.shields.io/badge/Docker%20Compose-3.8-blue?style=plastic&logo=docker)&nbsp;
@@ -12,7 +13,7 @@
 
 ### Features -
 - [x] Dockerize Application 
-- [ ]Docker Hot reloading for local development 
+- [ ] Docker Hot reloading for local development 
 - [x] Use multistage build 
 - [x] Separate credentials for local dev and production 
 - [x] Local docker image 
