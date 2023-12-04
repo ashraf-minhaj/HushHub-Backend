@@ -11,16 +11,16 @@
 </div>
 
 ### Features -
-- [ x ] Dockerize Application 
-- [  ]Docker Hot reloading for local development 
-- [ x ] Use multistage build 
-- [ x ] Separate credentials for local dev and production 
-- [  ] Local docker image 
-- [  ] Pull/push from the docker hub 
-- [  ] Log formatting (Configure logging in application) 
-- [ x ] Add seeding data for the application 
-- [ x ] Build a docker tool to wrap complex docker commands in a simpler format 
-- [  ] Bonus: List improvement scopes
+- [x] Dockerize Application 
+- [ ]Docker Hot reloading for local development 
+- [x] Use multistage build 
+- [x] Separate credentials for local dev and production 
+- [x] Local docker image 
+- [ ] Pull/push from the docker hub 
+- [ ] Log formatting (Configure logging in application) 
+- [x] Add seeding data for the application 
+- [x] Build a docker tool to wrap complex docker commands in a simpler format 
+- [x] Bonus: List improvement scopes
 
 ### setup local development envionment 
 - Install latest version of docker in your system
