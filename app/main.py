@@ -15,12 +15,15 @@ from dotenv import load_dotenv
 import logging
 import pymongo
 import os
+# import time
+from retrying import retry
 
 logging.basicConfig(format='%(asctime)s %(message)s')
 logging.info("Getting env vars")
 
 # Load environment variables from .env file
 # Access environment variables with default values
+# time.sleep(10)
 load_dotenv()
 ENV         = os.getenv('ENV', 'dev')
 PORT        = int(os.getenv('PORT', 8080))
@@ -32,21 +35,23 @@ logging.info(ENV, PORT, DB_URL)
 app = Flask(__name__)
 
 # connect to db
-try:
+@retry(wait_fixed=10000, stop_max_attempt_number=10)  # Retry every 10 seconds, up to 30 attempts
+def connect_to_mongodb():
+    global DEBUG, mycol
     db_client = pymongo.MongoClient(DB_URL)
     # db = db_client.get_database()
     mydb = db_client["dev"]
     mycol = mydb["devCollection"]
 
-    mydict = { "message": "Allh" }
-
-    x = mycol.insert_one(mydict)
-
     if ENV == "dev":
         logging.info("dev env")
         DEBUG = True
-except Exception as e:
-    logging.error(e)
+
+    return mycol
+# except Exception as e:
+#     logging.error(e)
+
+mycol = connect_to_mongodb()
 
 
 @app.route('/post_message', methods=['POST'])
@@ -68,12 +73,16 @@ def get_messages():
 
     return jsonify({'messages': messages})
 
-@app.route('/collections', methods=['GET'])
-def get_dbs():
-    # print("hey man")
-    logging.info("getting list of collections")
-    print(db_client.list_collection_names())
-    return jsonify({'success': True, 'message': db_client.list_collection_names()}), 200
+# @app.route('/collections', methods=['GET'])
+# def get_dbs():
+#     # print("hey man")
+#     logging.info("getting list of collections")
+#     print(db_client.list_collection_names())
+#     return jsonify({'success': True, 'message': db_client.list_collection_names()}), 200
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'success': True, 'message': "ok"}), 200
 
 if __name__ == '__main__':
-    app.run(debug=DEBUG, port=PORT)
+    app.run(debug=DEBUG, port=PORT, host='0.0.0.0')
