@@ -110,8 +110,11 @@ if __name__ == "__main__":
                   """)
         elif arg == "run":
             detach = False
-            if sys.argv[2] == "detach":
-                detach = True
+            try:
+                if sys.argv[2] == "detach":
+                    detach = True
+            except IndexError:
+                pass
             run_app(to_detach=detach)
         elif arg == "stop":
             stop()
