@@ -41,8 +41,8 @@ services:
       - ./.env
     networks:
       - hushhub_network
-    volumes:
-      - .:/app
+    # volumes:
+    #   - .:/app
 
 networks:
   hushhub_network:
