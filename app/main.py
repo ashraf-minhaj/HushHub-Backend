@@ -4,7 +4,7 @@
     author: ashraf minhaj
     mail: ashraf_minhaj@yahoo.com
     
-    date: 04-12-2023
+    date: 07-12-2023
 
 Backend API
 """
@@ -12,18 +12,18 @@ Backend API
 
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
-import logging
-import pymongo
-import os
-# import time
 from retrying import retry
+import pymongo
+import logging
+import sys
+import os
 
-logging.basicConfig(format='%(asctime)s %(message)s')
+# setup logger
+logging.basicConfig(format='%(asctime)s %(message)s', stream=sys.stdout)
 logging.info("Getting env vars")
 
-# Load environment variables from .env file
-# Access environment variables with default values
-# time.sleep(10)
+
+# Access environment variables (.env) with default values
 load_dotenv()
 ENV         = os.getenv('ENV', 'dev')
 PORT        = int(os.getenv('PORT', 8080))
@@ -37,26 +37,27 @@ app = Flask(__name__)
 # connect to db
 @retry(wait_fixed=10000, stop_max_attempt_number=10)  # Retry every 10 seconds, up to 30 attempts
 def connect_to_mongodb():
-    global DEBUG, mycol
-    db_client = pymongo.MongoClient(DB_URL)
-    # db = db_client.get_database()
-    mydb = db_client["dev"]
-    mycol = mydb["devCollection"]
+    """ connect to database and retun collection object. """
+    global DEBUG
+    db_client   = pymongo.MongoClient(DB_URL)
+    db          = db_client["dev"]
+    collection  = db["devCollection"]
 
     if ENV == "dev":
         logging.info("dev env")
         DEBUG = True
 
-    return mycol
-# except Exception as e:
-#     logging.error(e)
+    return collection
 
+# get database collection
 mycol = connect_to_mongodb()
 
 
 @app.route('/post_message', methods=['POST'])
 def post_message():
+    """ writes a message to db. """
     message = request.args.get('message')
+    logging.info(f"writing: {message}")
     if not message:
         return jsonify({'error': 'Message is required'}), 400
 
@@ -67,18 +68,11 @@ def post_message():
 
 @app.route('/get_messages', methods=['GET'])
 def get_messages():
-    # Retrieve messages from DynamoDB
+    """ gets all messages from the db. """
     messages = list(mycol.find({}, {'_id': 0}))
-    print(messages)
+    logging.info(messages)
 
     return jsonify({'messages': messages})
-
-# @app.route('/collections', methods=['GET'])
-# def get_dbs():
-#     # print("hey man")
-#     logging.info("getting list of collections")
-#     print(db_client.list_collection_names())
-#     return jsonify({'success': True, 'message': db_client.list_collection_names()}), 200
 
 @app.route('/health', methods=['GET'])
 def health():
