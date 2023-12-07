@@ -1,0 +1,49 @@
+#########################################
+# author: ashraf minhaj
+# email : ashraf_minhaj@yahoo.com
+# 
+# date: 04-12-23
+# HushHub Backend local dev environment
+#########################################
+
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: local_db
+    ports:
+      - "27017:27017"
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=dbuser
+    #   - MONGO_INITDB_ROOT_PASSWORD=hardpass
+    networks:
+      - hushhub_network
+  
+  mongo_seed:
+    build: ../tools/seed
+    container_name: local_seeder
+    depends_on:
+      - mongodb
+    networks:
+      - hushhub_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo_seed
+    env_file:
+      - ./.env
+    networks:
+      - hushhub_network
+    volumes:
+      - .:/app
+
+networks:
+  hushhub_network:
+    driver: bridge
