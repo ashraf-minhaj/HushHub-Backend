@@ -4,7 +4,7 @@
     author: ashraf minhaj
     mail: ashraf_minhaj@yahoo.com
     
-    date: 02-12-2023
+    date: 07-12-2023
 
 a docker wrapper tool for local development env.
 """
@@ -12,11 +12,8 @@ a docker wrapper tool for local development env.
 import sys
 from subprocess import Popen, PIPE, STDOUT
 
-# commands = {
-#     "build_image" : "cd ../app; sudo docker build -t hushfront:1"
-# }
 
-local_docker_file = "Dockerfile.dev"
+local_compose_file = "docker-compose-dev.yml"
 
 def run_command(job, command):
     """ runs command and ret err code """
@@ -48,41 +45,43 @@ def build_image(image_tag):
     #     print("error, notify devops team")
     run_with_stream(command)
 
-def run_container(image_tag, to_detach=True):
-    print(f"Runing app Container {image_tag}")
+def run_app(to_detach=True):
+    print(f"Runing app")
     if to_detach:
-        command = f"cd ../app; docker run --rm -v .:/app -d -p 80:3000 --env-file .env {image_tag}"
+        command = f"cd ../app; docker compose -f {local_compose_file} up --build -d"
     else:
-        command = f"cd ../app; docker run --rm -v .:/app -it -p 80:3000 --env-file .env {image_tag}"
+        command = f"cd ../app; docker compose -f {local_compose_file} up --build"
         run_with_stream(command)
         return
-    out, err = run_command(job=f"Running {image_tag}", command=command)
+    out, err = run_command(job=f"Running app", command=command)
     if err != 0:
         print("error, notify devops team")
 
-def stop(image_tag):
-    """ stop a specific container. """
-    print(f"stopping {image_tag}")
-    if image_tag != "all":
-        command = f"docker stop $(docker ps -a -q --filter ancestor={image_tag})"
-    elif image_tag == "all":
-        command = "docker stop $(docker ps -a -q)"
-    else:
-        print("please pass 'image_tag' or 'all' to stop all containers.")
-    # command = f"""docker rm $(docker stop $(docker ps -a -q --filter ancestor={image_tag} --format="{{.ID}}"""
-    _, err = run_command(job=f"Stopping {image_tag}", command=command)
+def stop():
+    """ stop compose. """
+    print(f"stopping app")
+    command = f"cd ../app; docker compose -f {local_compose_file} down"
+
+    _, err = run_command(job=f"Stopping local env", command=command)
     if err != 0:
         print("error, notify devops team")
 
 def get_logs(image_tag):
+    """ get backend application logs."""
     command = f"docker logs $(docker ps -a -q --filter ancestor={image_tag})"
     _, err = run_command(job=f"Getting logs for {image_tag}", command=command)
     if err != 0:
         print("error, notify devops team")
 
+def get_errors(image_tag):
+    """ get backend application logs."""
+    command = f"docker logs $(docker ps -a -q --filter ancestor={image_tag}) | grep error"
+    _, err = run_command(job=f"Getting logs for {image_tag}", command=command)
+    if err != 0:
+        print("Probably no error found, if you are sure otherwise - notify devops team")
+
 def get_list_of_images():
     command = f"docker images"
-    # command = f"cd ../app; ls"
     _, err = run_command(job=f"getting images", command=command)
     if err != 0:
         print("error, notify devops team")
@@ -102,30 +101,28 @@ if __name__ == "__main__":
                   list of args -
                     arg          -   value
                     help       
-                    build           image_tag 
                     list_images 
-                    run             image_tag 
-                    stop            image_tag or all
-                    logs            image_tag
-                    errors          image_tag
+                    run              detach/null
+                    stop             or all
+                    logs            
+                    errors          image_tag (in future)
                     
                   """)
-        if arg == "build":
-            # print(type(sys.argv[2]))
-            build_image(sys.argv[2])
         elif arg == "run":
-            # print(type(sys.argv[2]))
-            run_container(image_tag=f"{sys.argv[2]}", to_detach=False)
-        # elif arg == "stop_all":
-        #     stop_all()
+            detach = False
+            if sys.argv[2] == "detach":
+                detach = True
+            run_app(to_detach=detach)
         elif arg == "stop":
-            stop(sys.argv[2])
+            stop()
         elif arg == "list_images":
             get_list_of_images()
         elif arg == "logs":
-            get_logs(sys.argv[2])
+            image_tag = "app-backend"
+            get_logs(image_tag)
         elif arg == "errors":
-            pass
+            image_tag = "app-backend"
+            get_errors(image_tag)
         else:
             print("Please pass a valid command, type 'sudo python3 devtool.py help'")
         # get_list_of_images()
