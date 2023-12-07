@@ -11,10 +11,11 @@
     ``` 
         arg          -   value
         help       
-        build           image_tag 
         list_images 
-        run             image_tag 
-        stop            image_tag or all
-        logs            image_tag
-        errors          image_tag
+        run              detach/null
+        stop             or all
+        logs            
+        errors          image_tag (in future)
     ```
+
+  Do not run in detachable mode if you want to see live logs of the app.
