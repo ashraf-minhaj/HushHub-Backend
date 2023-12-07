@@ -45,7 +45,7 @@
         help       
         list_images 
         run              detach/null
-        stop             or all
+        stop             
         logs            
         errors          image_tag (in future)
     ```
