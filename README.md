@@ -5,23 +5,23 @@
 ![banner](docs/banner.png)
 
 ![](https://img.shields.io/badge/License-MIT%20License-red?style=plastic&logo=mit)&nbsp;
-![](https://img.shields.io/badge/Platform-Linux-black?labelColor=black&style=plastic&logo=linux)&nbsp;
+<!-- ![](https://img.shields.io/badge/Platform-Linux-black?labelColor=black&style=plastic&logo=linux)&nbsp; -->
 ![](https://img.shields.io/badge/Python-3.10-blue?style=plastic&logo=python)&nbsp;
 ![](https://img.shields.io/badge/docker--blue?style=plastic&logo=docker)&nbsp;
 ![](https://img.shields.io/badge/Docker%20Compose-3.8-blue?style=plastic&logo=docker)&nbsp;
 </div>
 
-### Features -
+see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
+### Features
 - [x] Dockerize Application 
 - [x] Docker Hot reloading for local development 
-- [x] Use multistage build 
-- [x] Separate credentials for local dev and production 
+- [x] Multistage build 
+- [x] Separate credentials for local dev and production (.env)
 - [x] Local docker image 
-- [ ] Pull/push from the docker hub 
+- [x] Pull/push from the docker hub 
 - [x] Log formatting (Configure logging in application) 
-- [x] Add seeding data for the application 
-- [x] Build a docker tool to wrap complex docker commands in a simpler format 
-- [x] Bonus: List improvement scopes
+- [x] Seeding data for the application 
+- [x] Docker tool to wrap complex docker commands in a simpler format 
 
 ### Improvement scopes (future considerations)
 - application health check monitoring and notification system
@@ -54,6 +54,13 @@
 
 ### Environment variable file
 The file should be named as `.env`, devs will get the dev env from the lead. no env specific things should reside on the repository.
+
+### Build and Push image to dockerhub
+
+    ```
+    cd scripts/
+    bash build_n_push.sh <version-tag>
+    ```
 
 ### Refactoring
 - If gitignore is not taking changes, reason is Git's cache hasn't been refreshed to reflect the changes in Gitignore.
