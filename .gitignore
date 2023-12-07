@@ -2,6 +2,6 @@ app/*
 !app/*.yml
 !app/main.py
 !app/requirements.txt
-!app/Dockerfile
+!app/Dockerfile*
 !app/*example
 .DS_Store
