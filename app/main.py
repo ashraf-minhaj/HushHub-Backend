@@ -78,5 +78,9 @@ def get_messages():
 def health():
     return jsonify({'success': True, 'message': "ok"}), 200
 
+@app.route('/info', methods=['GET'])
+def info():
+    return jsonify({'success': True, 'version': '1.0', 'message': 'bro, this works on your machine too'}), 200
+
 if __name__ == '__main__':
     app.run(debug=DEBUG, port=PORT, host='0.0.0.0')
