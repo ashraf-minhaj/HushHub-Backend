@@ -4,7 +4,7 @@
     author: ashraf minhaj
     mail: ashraf_minhaj@yahoo.com
     
-    date: 02-12-2023
+    date: 07-12-2023
 
 Backend API
 """
@@ -12,75 +12,75 @@ Backend API
 
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
-import boto3
+from retrying import retry
+import pymongo
+import logging
+import sys
 import os
 
-load_dotenv()
-# Access environment variables with default values
-PORT    = int(os.getenv('PORT', 5000))
-DB_URL  = os.getenv('DB_URL', 'http://localhost:8000')
+# setup logger
+logging.basicConfig(format='%(asctime)s %(message)s', stream=sys.stdout)
+logging.info("Getting env vars")
 
-print(PORT, DB_URL)
+
+# Access environment variables (.env) with default values
+load_dotenv()
+ENV         = os.getenv('ENV', 'dev')
+PORT        = int(os.getenv('PORT', 8080))
+DB_URL      = os.getenv('DB_URL', 'mongodb://localhost:27017') # f"mongodb://{username}:{password}@host:port/"
+DEBUG       = False
+
+logging.info(ENV, PORT, DB_URL)
 
 app = Flask(__name__)
 
-# DynamoDB configuration
-dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000')
-print(dynamodb)
-# table_name = 'HushHubMessages'
-# table = dynamodb.Table(table_name)
-table_name = 'messages'
-try:
-    table = dynamodb.create_table(
-        TableName=table_name,
-        KeySchema=[
-            {
-                'AttributeName': 'message',
-                'KeyType': 'HASH'
-            },
-        ],
-        AttributeDefinitions=[
-            {
-                'AttributeName': 'message',
-                'AttributeType': 'S'
-            },
-        ],
-        ProvisionedThroughput={
-            'ReadCapacityUnits': 5,
-            'WriteCapacityUnits': 5
-        }
-    )
-except dynamodb.meta.client.exceptions.ResourceInUseException as e:
-    # Table already exists, so no need to create it again
-    table = dynamodb.Table(table_name)
-    print(table)
-    print("shit")
-except Exception as e:
-    # Handle other exceptions if needed
-    print(f"An error occurred: {e}")
+# connect to db
+@retry(wait_fixed=10000, stop_max_attempt_number=10)  # Retry every 10 seconds, up to 30 attempts
+def connect_to_mongodb():
+    """ connect to database and retun collection object. """
+    global DEBUG
+    db_client   = pymongo.MongoClient(DB_URL)
+    db          = db_client["dev"]
+    collection  = db["devCollection"]
+
+    if ENV == "dev":
+        logging.info("dev env")
+        DEBUG = True
+
+    return collection
+
+# get database collection
+mycol = connect_to_mongodb()
 
 
 @app.route('/post_message', methods=['POST'])
 def post_message():
+    """ writes a message to db. """
     message = request.args.get('message')
-    # data = request.json
-    # message = data.get('message')
-
+    logging.info(f"writing: {message}")
     if not message:
         return jsonify({'error': 'Message is required'}), 400
 
-    # Store message in DynamoDB
-    response = table.put_item(Item={'message': message})
+    # Store message in db
+    result = mycol.insert_one({'message': message})
 
-    return jsonify({'success': True, 'message': message}), 201
+    return jsonify({'success': True, 'message_id': str(result.inserted_id)}), 201
 
 @app.route('/get_messages', methods=['GET'])
 def get_messages():
-    # Retrieve messages from DynamoDB
-    response = table.scan()
-    messages = response.get('Items', [])
+    """ gets all messages from the db. """
+    messages = list(mycol.find({}, {'_id': 0}))
+    logging.info(messages)
 
     return jsonify({'messages': messages})
 
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'success': True, 'message': "ok"}), 200
+
+@app.route('/info', methods=['GET'])
+def info():
+    return jsonify({'success': True, 'version': '1.0', 'message': 'bro, this works on your machine too'}), 200
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=DEBUG, port=PORT, host='0.0.0.0')
