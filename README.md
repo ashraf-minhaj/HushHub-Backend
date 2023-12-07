@@ -23,6 +23,12 @@
 - [x] Build a docker tool to wrap complex docker commands in a simpler format 
 - [x] Bonus: List improvement scopes
 
+### Improvement scopes (future considerations)
+- application health check monitoring and notification system
+- test scripts to catch bugs at early stage
+- CI/CD
+(more to come)
+
 ### setup local development envionment 
 - Install latest version of docker in your system
 - Install python3 on your system (should come with your distro BTW)
@@ -37,13 +43,14 @@
     ``` 
         arg          -   value
         help       
-        build           image_tag 
         list_images 
-        run             image_tag 
-        stop            image_tag or all
-        logs            image_tag
-        errors          image_tag (todo)
+        run              detach/null
+        stop             or all
+        logs            
+        errors          image_tag (in future)
     ```
+
+  Do not run in detachable mode if you want to see live logs of the app.
 
 ### Environment variable file
 The file should be named as `.env`, devs will get the dev env from the lead. no env specific things should reside on the repository.
