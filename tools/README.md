@@ -15,7 +15,7 @@
         run              detach/null
         stop             
         logs            
-        errors          image_tag (in future)
+        errors          
     ```
 
   Do not run in detachable mode if you want to see live logs of the app.
