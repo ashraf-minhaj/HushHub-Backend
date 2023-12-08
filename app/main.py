@@ -4,13 +4,14 @@
     author: ashraf minhaj
     mail: ashraf_minhaj@yahoo.com
     
-    date: 07-12-2023
+    date: 08-12-2023
 
 Backend API
 """
 
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from dotenv import load_dotenv
 from retrying import retry
 import pymongo
@@ -33,6 +34,7 @@ DEBUG       = False
 logging.info(ENV, PORT, DB_URL)
 
 app = Flask(__name__)
+CORS(app) 
 
 # connect to db
 @retry(wait_fixed=10000, stop_max_attempt_number=10)  # Retry every 10 seconds, up to 30 attempts
