@@ -10,6 +10,8 @@ version: '3.8'
 
 services:
   backend:
+    # in future it will be the 'latest' for best practice
+    # instead of numeric version
     image: ashraftheminhaj/hushhub-backend:1.0
     container_name: backend
     ports:
