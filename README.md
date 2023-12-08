@@ -11,7 +11,9 @@
 ![](https://img.shields.io/badge/Docker%20Compose-3.8-blue?style=plastic&logo=docker)&nbsp;
 </div>
 
+see [demo snap](#demo)
 see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
+
 ### Features
 - [x] Dockerize Application 
 - [x] Docker Hot reloading for local development 
@@ -28,6 +30,9 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
 - test scripts to catch bugs at early stage
 - CI/CD
 (more to come)
+
+### Demo
+![demo](docs/demo.png)
 
 ### setup local development envionment 
 - Install latest version of docker in your system
@@ -47,7 +52,7 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
         run              detach/null
         stop             
         logs            
-        errors          image_tag (in future)
+        errors          
     ```
 
   Do not run in detachable mode if you want to see live logs of the app.
