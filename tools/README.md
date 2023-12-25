@@ -10,7 +10,7 @@
 
 - Now run the tool from your 'app' directory. 
      ```
-        $ devtool run --app-name devfrontend
+        $ devtool run --app-name devbackend
     ```
 
 - example `devtool --help` -
