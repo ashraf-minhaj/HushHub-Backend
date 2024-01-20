@@ -1,2 +1,35 @@
 # unit test
 # docker image build
+name: 'Test n Build'
+on:
+  push:
+    branches:
+      - "*/*"
+      - "!main"
+      - "!stage"
+
+jobs:
+  Test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:      
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x86'
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: test app
+        run: python test_main.py
+        working-directory: ./app
+
+      
