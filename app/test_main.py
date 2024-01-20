@@ -7,8 +7,6 @@ mail: ashraf_minhaj@yahoo.com
 import unittest
 import json
 from main import app
-# from mongomock import MongoClient
-# from unittest.mock import patch, MagicMock
 
 class TestApp(unittest.TestCase):
     def setUp(self):
