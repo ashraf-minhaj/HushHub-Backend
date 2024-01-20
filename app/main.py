@@ -26,14 +26,15 @@ logging.info("Getting env vars")
 # Access environment variables (.env) with default values
 load_dotenv()
 ENV         = os.getenv('ENV', 'dev')
-PORT        = int(os.getenv('PORT', 8080))
-DB_URL      = os.getenv('DB_URL', 'mongodb://localhost:27017') # f"mongodb://{username}:{password}@host:port/"
+PORT        = int(os.getenv('PORT', "8080"))
+# f"mongodb://{username}:{password}@host:port/"
+DB_URL      = os.getenv('DB_URL', 'mongodb://localhost:27017')
 DEBUG       = False
 
 logging.info(ENV, PORT, DB_URL)
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app)
 
 # connect to db
 @retry(wait_fixed=10000, stop_max_attempt_number=10)  # Retry every 10 seconds, up to 30 attempts
@@ -65,7 +66,7 @@ def post_message():
     # Store message in db
     result = mycol.insert_one({'message': message})
 
-    return jsonify({'success': True, 
+    return jsonify({'success': True,
                     'message_id': str(result.inserted_id)
                     }), 201
 
@@ -80,14 +81,14 @@ def get_messages():
 @app.route('/health', methods=['GET'])
 def health():
     """ shows if app is running """
-    return jsonify({'success': True, 
+    return jsonify({'success': True,
                     'message': "ok"
                     }), 200
 
 @app.route('/info', methods=['GET'])
 def info():
     """ shows information about the app """
-    return jsonify({'success': True, 
+    return jsonify({'success': True,
                     'version': '1.0', 
                     'message': 'bro, this works on your machine too'
                     }), 200
