@@ -37,10 +37,11 @@ app = Flask(__name__)
 CORS(app)
 
 # connect to db
-@retry(wait_fixed=10000, stop_max_attempt_number=10)  # Retry every 10 seconds, up to 30 attempts
+# Retry every 10 seconds, up to 30 attempts
+@retry(wait_fixed=10000, stop_max_attempt_number=10)
 def connect_to_mongodb():
     """ connect to database and retun collection object. """
-    global DEBUG
+    global DEBUG # pylint: disable=global-statement
     db_client   = pymongo.MongoClient(DB_URL)
     db          = db_client["dev"]
     collection  = db["devCollection"]
@@ -59,7 +60,7 @@ mycol = connect_to_mongodb()
 def post_message():
     """ writes a message to db. """
     message = request.args.get('message')
-    logging.info(f"writing: {message}")
+    logging.info(f"writing: {message}")     # pylint: disable=logging-fstring-interpolation
     if not message:
         return jsonify({'error': 'Message is required'}), 400
 
