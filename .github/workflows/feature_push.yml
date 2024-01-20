@@ -33,6 +33,7 @@ jobs:
   
   Build_image:
     name: build image
+    needs: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
