@@ -27,6 +27,7 @@ jobs:
       #   run: python -c "import sys; print(sys.version)"
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+        working-directory: ./app
       - name: test app
         run: python test_main.py
         working-directory: ./app
