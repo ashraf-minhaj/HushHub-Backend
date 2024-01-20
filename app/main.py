@@ -10,19 +10,18 @@ Backend API
 """
 
 
+import os
+import sys
+import logging
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from retrying import retry
 import pymongo
-import logging
-import sys
-import os
 
 # setup logger
 logging.basicConfig(format='%(asctime)s %(message)s', stream=sys.stdout)
 logging.info("Getting env vars")
-
 
 # Access environment variables (.env) with default values
 load_dotenv()
@@ -66,7 +65,9 @@ def post_message():
     # Store message in db
     result = mycol.insert_one({'message': message})
 
-    return jsonify({'success': True, 'message_id': str(result.inserted_id)}), 201
+    return jsonify({'success': True, 
+                    'message_id': str(result.inserted_id)
+                    }), 201
 
 @app.route('/get_messages', methods=['GET'])
 def get_messages():
@@ -78,11 +79,18 @@ def get_messages():
 
 @app.route('/health', methods=['GET'])
 def health():
-    return jsonify({'success': True, 'message': "ok"}), 200
+    """ shows if app is running """
+    return jsonify({'success': True, 
+                    'message': "ok"
+                    }), 200
 
 @app.route('/info', methods=['GET'])
 def info():
-    return jsonify({'success': True, 'version': '1.0', 'message': 'bro, this works on your machine too'}), 200
+    """ shows information about the app """
+    return jsonify({'success': True, 
+                    'version': '1.0', 
+                    'message': 'bro, this works on your machine too'
+                    }), 200
 
 if __name__ == '__main__':
     app.run(debug=DEBUG, port=PORT, host='0.0.0.0')

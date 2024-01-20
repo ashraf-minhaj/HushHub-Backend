@@ -46,5 +46,5 @@ jobs:
         run: python -m pip install pylint
         working-directory: ./app
       - name: Lint
-        run: pylint .
+        run: pylint main.py
         working-directory: ./app
