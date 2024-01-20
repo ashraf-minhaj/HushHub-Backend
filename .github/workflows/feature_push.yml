@@ -10,12 +10,11 @@ on:
 
 jobs:
   Test:
-    name: Test
+    name: Unit Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
-
     steps:      
       - name: Checkout
         uses: actions/checkout@v2
@@ -30,6 +29,16 @@ jobs:
         working-directory: ./app
       - name: test app
         run: python test_main.py
+        working-directory: ./app
+  
+  Build_image:
+    name: build image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build Docker Image
+        run: docker build -t test-img:latest .
         working-directory: ./app
 
       
