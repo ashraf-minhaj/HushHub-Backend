@@ -35,10 +35,10 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
 - **On Push to feature branch**:
     - [x] Unit Test
     - [x] Build Image
-    - [ ] Deploy to dev env from feature branch 
-        - [ ] run dev deployment workflow by `commit-msg`
-        <!-- - [ ] run workflow by `pr-comment` -->
 
+- [ ] Deploy to dev env from feature branch 
+    - [x] run dev deployment workflow by `commit-msg`. commit with `deploy-dev` comment
+        <!-- - [ ] run workflow by `pr-comment` -->
 - [ ] on CD deploy image to dockerHub
 - [ ] Implement CD from `main` branch to both the envs (dev, prod)
 - [ ] Implement a simple rollback job that we use the last successful image to do the deployment 
