@@ -20,14 +20,6 @@ jobs:
         if: contains(github.event.head_commit.message, 'deploy-dev')
         run: |
           echo "{result}={ok}" >> $GITHUB_OUTPUT
-        # run: |
-        #   if [[ "${{ github.event.head_commit.message }}" == *"deploy-dev"* ]]; then
-        #     echo "The commit message contains 'deploy-dev'."
-        #     echo "{result}={success}" >> $GITHUB_OUTPUT
-        #   else
-        #     echo "The commit message does not contain 'deploy-dev'."
-        #     echo "{result}={failed}" >> $GITHUB_OUTPUT
-        #   fi
     
   deploy_dev:
     if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
