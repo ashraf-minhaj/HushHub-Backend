@@ -36,10 +36,10 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
     - [x] Unit Test
     - [x] Build Image
     - [ ] Deploy to dev env from feature branch 
-        - [ ] run workflow by `commit-msg`
-        - [ ] run workflow by `pr-comment`
+        - [ ] run dev deployment workflow by `commit-msg`
+        <!-- - [ ] run workflow by `pr-comment` -->
 
-- [ ] Cl fail email notification with details
+- [ ] on CD deploy image to dockerHub
 - [ ] Implement CD from `main` branch to both the envs (dev, prod)
 - [ ] Implement a simple rollback job that we use the last successful image to do the deployment 
 - [ ] Calculate disaster recovery time of the CI/CD

@@ -1,2 +1,13 @@
-# read commit message. 'deploy stg'
+# read commit message. 'deploy dev'
 # deploy to stg env
+name: deploy dev
+on: push
+
+jobs:
+ test:
+   runs-on: [ ubuntu-latest ]
+   steps:
+     - name: deploy to dev
+       if: contains(github.event.head_commit.message, 'deploy-dev')
+       run: |
+         echo 'deploying dev env!'
