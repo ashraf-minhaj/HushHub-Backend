@@ -14,7 +14,7 @@
 see [demo snap](#demo)
 see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
 
-### Features
+### Application Features
 - [x] Dockerize Application 
 - [x] Docker Hot reloading for local development 
 - [x] Multistage build 
@@ -23,7 +23,37 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
 - [x] Pull/push from the docker hub 
 - [x] Log formatting (Configure logging in application) 
 - [x] Seeding data for the application 
-- [x] Docker tool to wrap complex docker commands in a simpler format 
+- [x] Docker tool to wrap complex docker commands in a simpler format
+
+### CI/CD Features
+#### On PR :
+    - [x] Linter
+    - [x] Unit Test
+    - [x] CodeQL
+    - [x] SonarQube, With results in PR annotations (integrated with SonarCloud)
+
+#### On Push to feature branch :
+    - [ ] As a dev I want to deploy to dev env from my custom branch
+    - [ ] 
+    - [ ] 
+    - [ ] 
+
+- [ ] Cl fail email notification with details
+- [ ] Implement CD from `main` branch to both these envs
+- [ ] Implement a simple rollback job that we use the last successful image to do the deployment 
+- [ ] Calculate disaster recovery time of the CI/CD
+- [ ] Notify on failed deployments with details in the email
+------
+
+* Setup Production and Dev Environment servers
+* Scope of improvements
+* Bonus: Implement Integration Test on post deployment on real environment
+
+
+
+
+
+
 
 ### Improvement scopes (future considerations)
 - application health check monitoring and notification system
