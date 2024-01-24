@@ -22,7 +22,8 @@ jobs:
           echo "{result}={ok}" >> $GITHUB_OUTPUT
     
   deploy_dev:
-    if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
+    # if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
+    if: needs.check_msg.result == 'ok'
     needs: check_msg
     runs-on: [ ubuntu-latest ]
     steps:
