@@ -40,14 +40,14 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
         - [ ] run workflow by `pr-comment`
 
 - [ ] Cl fail email notification with details
-- [ ] Implement CD from `main` branch to both these envs
+- [ ] Implement CD from `main` branch to both the envs (dev, prod)
 - [ ] Implement a simple rollback job that we use the last successful image to do the deployment 
 - [ ] Calculate disaster recovery time of the CI/CD
 - [ ] Notify on failed deployments with details in the email
 
 - [ ] Setup Production and Dev Environment servers
 - [ ] Scope of improvements
-- [ ]Bonus: Implement Integration Test on post deployment on real environment
+- [ ] Bonus: Implement Integration Test on post deployment on real environment
 
 
 ### Improvement scopes (future considerations)
