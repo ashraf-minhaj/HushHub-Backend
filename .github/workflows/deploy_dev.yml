@@ -17,9 +17,17 @@ jobs:
     steps:
       - name: deploy to dev
         id: msg_checker
-        if: contains(github.event.head_commit.message, 'deploy-dev')
+        # if: contains(github.event.head_commit.message, 'deploy-dev')
+        # run: |
+        #     echo 'deploying dev env!'
         run: |
-            echo 'deploying dev env!'
+          if [[ "${{ github.event.head_commit.message }}" == *"deploy-dev"* ]]; then
+            echo "The commit message contains 'deploy-dev'."
+            echo "::set-output name=result::success"
+          else
+            echo "The commit message does not contain 'deploy-dev'."
+            echo "::set-output name=result::failed"
+          fi
     
   deploy_dev:
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
