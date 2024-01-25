@@ -47,6 +47,8 @@ jobs:
         run: |
           echo "${{ secrets.SERVER_SSH_KEY }}" > ssh_key.pem
           chmod 400 ssh_key.pem
+          touch $HOME/.ssh/known_hosts
+          
       - name: Download the .env file
         run: |
           echo "${{ secrets.DEV_ENV_VARS }}" > .env
@@ -55,7 +57,7 @@ jobs:
         run: |
           echo "send the .env file to the server first"
           # scp -i ssh_key.pem .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
-          ssh -i ssh_key.pem -v ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo touch y.txt'
+          ssh -i -o StrictHostKeyChecking=no ssh_key.pem -v ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo touch y.txt'
           # ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker stop cddemo || true'
 
         
