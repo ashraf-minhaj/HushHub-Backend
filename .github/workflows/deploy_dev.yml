@@ -54,7 +54,7 @@ jobs:
       - name: Deploy project
         run: |
           echo "send the .env file to the server first"
-          scp -i ssh_key.pem .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/"
+          scp -i ssh_key.pem .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
           # ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker stop cddemo || true'
 
         
