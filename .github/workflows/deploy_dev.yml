@@ -20,39 +20,47 @@ jobs:
         if: contains(github.event.head_commit.message, 'deploy-dev')
         run: |
           echo "{result}={ok}" >> $GITHUB_OUTPUT
-    
-  deploy_dev:
-    # if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
-    if: contains(needs.check_msg.result, 'ok')
+  
+  check_out:
     needs: check_msg
     runs-on: [ ubuntu-latest ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: check commit message
+        run: |
+          echo "${{needs.check_msg.result}}"
 
-      # - run: echo ${{needs.msg_checker.outputs.output1}}
+  # deploy_dev:
+  #   # if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
+  #   if: contains(needs.check_msg.result, 'ok')
+  #   needs: check_msg
+  #   runs-on: [ ubuntu-latest ]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v3
-      #   with:
-      #       username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #       password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     # - run: echo ${{needs.msg_checker.outputs.output1}}
 
-      - name: Build Docker Image
-        run: cd app ; docker build -t ${{env.IMAGE_TAG}} .
+  #     # - name: Login to Docker Hub
+  #     #   uses: docker/login-action@v3
+  #     #   with:
+  #     #       username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     #       password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # - name: Push Docker Image to Docker Hub
-      #   run: docker push ${{env.IMAGE_TAG}}
+  #     - name: Build Docker Image
+  #       run: cd app ; docker build -t ${{env.IMAGE_TAG}} .
+
+  #     # - name: Push Docker Image to Docker Hub
+  #     #   run: docker push ${{env.IMAGE_TAG}}
       
-      # - name: Connect to droplet via SSH
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #       host: ${{ secrets.UAT_DROPLET_IP }}
-      #       username: ${{ secrets.UAT_DROPLET_USERNAME }}
-      #       key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #       passphrase: ${{ secrets.UAT_DROPLET_PASSWORD }}
-      #       password: ${{ secrets.UAT_DROPLET_PASSWORD }}
-      #       script: |
-      #       echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-      #       docker stop ${{env.CONTAINER_NAME}} && docker rm ${{env.CONTAINER_NAME}} || true
-      #       docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{env.IMAGE_TAG}}
+  #     # - name: Connect to droplet via SSH
+  #     #   uses: appleboy/ssh-action@master
+  #     #   with:
+  #     #       host: ${{ secrets.UAT_DROPLET_IP }}
+  #     #       username: ${{ secrets.UAT_DROPLET_USERNAME }}
+  #     #       key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #     #       passphrase: ${{ secrets.UAT_DROPLET_PASSWORD }}
+  #     #       password: ${{ secrets.UAT_DROPLET_PASSWORD }}
+  #     #       script: |
+  #     #       echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+  #     #       docker stop ${{env.CONTAINER_NAME}} && docker rm ${{env.CONTAINER_NAME}} || true
+  #     #       docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{env.IMAGE_TAG}}
