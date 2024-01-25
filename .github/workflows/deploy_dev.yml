@@ -15,7 +15,7 @@ jobs:
   check_msg:
     runs-on: [ ubuntu-latest ]
     outputs:
-      run_next: ${{ steps.check_msg.outputs.run_next }}
+      run_next: ${{ steps.msg_checker.outputs.run_next }}
     steps:
       - name: check commit message
         id: msg_checker
