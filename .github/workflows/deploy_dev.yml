@@ -21,24 +21,24 @@ jobs:
         id: msg_checker
         if: contains(github.event.head_commit.message, 'deploy-dev')
         run: |
-          echo "{run_next}={true}" >> $GITHUB_OUTPUT
+          echo "run_next=true" >> "$GITHUB_OUTPUT"
   
-  check_out:
-    needs: check_msg
-    runs-on: [ ubuntu-latest ]
-    steps:
-      - name: check commit message
-        run: |
-          echo "${{needs.check_msg.outputs.run_next}}"
-
-  # deploy_dev:
-  #   # if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
-  #   if: contains(needs.check_msg.result, 'ok')
+  # check_out:
   #   needs: check_msg
   #   runs-on: [ ubuntu-latest ]
   #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
+  #     - name: check commit message
+  #       run: |
+  #         echo "${{needs.check_msg.outputs.run_next}}"
+
+  deploy_dev:
+    # if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
+    if: contains(needs.check_msg.outputs.run_next, 'true')
+    needs: check_msg
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
   #     # - run: echo ${{needs.msg_checker.outputs.output1}}
 
