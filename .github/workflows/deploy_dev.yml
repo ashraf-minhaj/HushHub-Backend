@@ -46,7 +46,7 @@ jobs:
       
       - name: Set permissions for private key
         run: |
-          echo "${{ env.SERVER_SSH_KEY }}" > ssh_key.pem
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ssh_key.pem
           chmod 600 ssh_key.pem
       
       # - name: Connect to server via SSH
