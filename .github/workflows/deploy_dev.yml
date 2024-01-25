@@ -45,8 +45,8 @@ jobs:
       
       - name: Set permissions for private key
         run: |
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ssh_key.pem
-          chmod 400 ssh_key.pem
+          echo "${{ secrets.SERVER_SSH_KEY }}" > min-ec2-key.pem
+          chmod 400 min-ec2-key.pem
       - name: Download the .env file
         run: |
           echo "${{ secrets.DEV_ENV_VARS }}" > .env
@@ -54,8 +54,8 @@ jobs:
       - name: Deploy project
         run: |
           echo "send the .env file to the server first"
-          scp -i ssh_key.pem .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
-          # ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker stop cddemo || true'
+          scp -i min-ec2-key.pem .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
+          # ssh -i min-ec2-key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker stop cddemo || true'
 
         
       
