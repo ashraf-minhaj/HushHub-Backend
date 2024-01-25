@@ -37,18 +37,18 @@ jobs:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker Image
-        run: cd app ; docker build -t ${{env.IMAGE_TAG}} .
+      # - name: Build Docker Image
+      #   run: cd app ; docker build -t ${{env.IMAGE_TAG}} .
 
-      - name: Push Docker Image to Docker Hub
-        run: docker push ${{env.IMAGE_TAG}}
+      # - name: Push Docker Image to Docker Hub
+      #   run: docker push ${{env.IMAGE_TAG}}
       
       - name: Set permissions for private key
         run: |
           echo "${{ secrets.SERVER_SSH_KEY }}" > ssh_key.pem
           chmod 400 ssh_key.pem
-          touch $HOME/.ssh/known_hosts
-          
+          # touch $HOME/.ssh/known_hosts
+
       - name: Download the .env file
         run: |
           echo "${{ secrets.DEV_ENV_VARS }}" > .env
