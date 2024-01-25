@@ -23,7 +23,7 @@ jobs:
     
   deploy_dev:
     # if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
-    if: needs.check_msg.result == 'ok'
+    if: contains(needs.check_msg.result, 'ok')
     needs: check_msg
     runs-on: [ ubuntu-latest ]
     steps:
