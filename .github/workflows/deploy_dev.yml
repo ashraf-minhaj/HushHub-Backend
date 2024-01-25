@@ -46,7 +46,7 @@ jobs:
       - name: Set permissions for private key
         run: |
           echo "${{ secrets.SERVER_SSH_KEY }}" > ssh_key.pem
-          chmod 400 ssh_key.pem
+          chmod 600 ssh_key.pem
           # touch $HOME/.ssh/known_hosts
 
       - name: Download the .env file
