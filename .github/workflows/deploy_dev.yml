@@ -66,7 +66,7 @@ jobs:
         with:
           host: ${{ secrets.DEV_SERVER_IP }}
           username: ec2-user
-          key: ${{ secrets.SSHKEY }}
+          key: ${{ secrets.SSH_KEY }}
           passphrase: 12345
           # password: 12345
           script: |
