@@ -45,8 +45,8 @@ jobs:
       
       - name: Set permissions for private key
         run: |
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ssh_key.pem
-          chmod 600 ssh_key.pem
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
           # touch $HOME/.ssh/known_hosts
 
       - name: Download the .env file
@@ -56,9 +56,9 @@ jobs:
       - name: Deploy project
         run: |
           echo "send the .env file to the server first"
-          chmod 600 ssh_key.pem
+          # chmod 600 ssh_key.pem
           # scp -i ssh_key.pem .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
-          ssh -o StrictHostKeyChecking=no -i ssh_key.pem -v ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo touch y.txt'
+          ssh -o StrictHostKeyChecking=no -v ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo touch y.txt'
           # ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker stop cddemo || true'
 
         
