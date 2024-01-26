@@ -68,7 +68,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.SSHKEY }}
           passphrase: 12345
-          password: 12345
+          # password: 12345
           script: |
             ls -a
           # echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
