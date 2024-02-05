@@ -3,7 +3,7 @@
 # on -
 #   1. push to main (because it was the task)
 #   2. any feature branch with commit message - 'deploy-dev'
-#   3. PR to stage
+#   3. comment on pr - '/deploy-dev'
 # 
 # author: ashraf minhaj
 # mail  : ashraf_minhaj@yahoo.com
@@ -56,7 +56,7 @@ jobs:
     steps:
       - name: check pr message
         id: comment_checker
-        if: contains(github.event.comment.body, '/test') 
+        if: contains(github.event.comment.body, '/deploy-dev') 
         run: |
           echo "deploy_devstg=true" >> "$GITHUB_OUTPUT"
       - name: acknowlodgement 

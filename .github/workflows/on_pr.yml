@@ -1,7 +1,14 @@
-# linting
-# unit test
-# CodeQL
-# SonarQube with results on PR
+#########################################
+# on PR
+#   1. linting
+#   2. unit test
+#   3. CodeQL (by github actions)
+#   4. SonarQube with results on PR (by SonarCloud)
+# 
+# author: ashraf minhaj
+# mail  : ashraf_minhaj@yahoo.com
+#########################################
+
 name: 'PR Tests'
 on:
   pull_request:
