@@ -1,5 +1,12 @@
-# unit test
-# docker image build
+#########################################
+# on push to feature branches, runs -
+#   1. unit test
+#   2. docker image build
+# 
+# author: ashraf minhaj
+# mail  : ashraf_minhaj@yahoo.com
+#########################################
+
 name: 'Test n Build'
 on:
   push:
@@ -41,5 +48,3 @@ jobs:
       - name: Build Docker Image
         run: docker build -t test-img:latest .
         working-directory: ./app
-
-      
