@@ -60,7 +60,7 @@ jobs:
         run: |
           echo "deploy_devstg=true" >> "$GITHUB_OUTPUT"
       - name: acknowlodgement 
-        if: always() && success() $$ ( "${{ steps.comment_checker.outputs.deploy_devstg }}" == "true")
+        if: contains(steps.comment_checker.outputs.deploy_devstg, 'true')
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
