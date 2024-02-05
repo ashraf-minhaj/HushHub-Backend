@@ -12,7 +12,7 @@ on: push
 
 jobs:
   rollback:
-    name: Unit Test
+    name: rollback to prev sha
     runs-on: ubuntu-latest
     steps:      
       - name: Checkout
