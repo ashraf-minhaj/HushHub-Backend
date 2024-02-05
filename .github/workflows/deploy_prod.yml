@@ -4,7 +4,7 @@
 # author: ashraf minhaj
 # mail  : ashraf_minhaj@yahoo.com
 #########################################
-name: deploy on production env
+name: deploy on prod env
 on: 
   push:
     branches:
@@ -18,21 +18,7 @@ env:
   ENV_FILE: .env
 
 jobs:
-  check_msg:
-    runs-on: [ ubuntu-latest ]
-    outputs:
-      run_next: ${{ steps.msg_checker.outputs.run_next }}
-    steps:
-      - name: check commit message
-        id: msg_checker
-        if: contains(github.event.head_commit.message, 'deploy-dev')
-        run: |
-          echo "run_next=true" >> "$GITHUB_OUTPUT"
-
-  deploy_dev:
-    # if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
-    if: contains(needs.check_msg.outputs.run_next, 'true')
-    needs: check_msg
+  deploy_prod:
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout
