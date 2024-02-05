@@ -47,7 +47,8 @@ jobs:
         run: |
           echo "deploy_devstg=true" >> "$GITHUB_OUTPUT"
   
-  check_pr_comment:
+  check_pr_comment:                                                       # only if it's a pr
+    if: ${{ github.event.issue.pull_request }}
     runs-on: [ ubuntu-latest ]
     permissions: write-all
     outputs:
