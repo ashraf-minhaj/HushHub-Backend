@@ -48,7 +48,7 @@ jobs:
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.DEV_SSH_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H 65.0.86.161 > ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.DEV_SERVER_IP }} > ~/.ssh/known_hosts
       
       - name: Download the .env file
         run: |
@@ -57,11 +57,9 @@ jobs:
       - name: Deploy project
         run: |
           echo "send the .env file to the server first"
-          # chmod 600 ssh_key.pem
-          scp .env ec2-user@65.0.86.161:~/
-          # scp -i ssh_key.pem .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
-          # ssh -o StrictHostKeyChecking=no -v ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo touch y.txt'
-          # ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker stop cddemo || true'
+          scp .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
+          ssh ec2-user@${{ secrets.DEV_SERVER_IP }} 'echo fromgha > y.txt'
+          # ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker ps || true'
 
       # - name: Connect to droplet via SSH
       #   uses: appleboy/ssh-action@master
