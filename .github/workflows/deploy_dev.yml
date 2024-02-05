@@ -59,31 +59,10 @@ jobs:
           scp .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
           ssh ec2-user@${{ secrets.DEV_SERVER_IP }} 'echo fromgha > fromgha.txt'
 
-      # - name: run container
-      #   run: |
-      #     ssh ec2-user@${{ secrets.DEV_SERVER_IP }} /
-      #     'echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin && /
-      #     docker stop ${{env.CONTAINER_NAME}} && docker rm ${{env.CONTAINER_NAME}} && /
-      #     docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{env.IMAGE_TAG}}'
-
       - name: run container
         run: |
           ssh ec2-user@${{ secrets.DEV_SERVER_IP }} \
             'echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin && \
-            sudo docker stop --quiet ${{env.CONTAINER_NAME}} > /dev/null 2>&1 && \
-            sudo docker rm ${{env.CONTAINER_NAME}} > /dev/null 2>&1 && \
+            sudo docker stop --quiet ${{env.CONTAINER_NAME}} && \
+            sudo docker rm ${{env.CONTAINER_NAME}} && \
             sudo docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{env.IMAGE_TAG}}'
-
-      
-      # - name: Connect to server via SSH
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #       host: ${{ secrets.DEV_SERVER_IP }}
-      #       username: ${{ secrets.DEV_SERVER_USERNAME }}
-      #       key: ${{ secrets.DEV_SSH_KEY }}
-      #       passphrase: ${{ secrets.DEV_SERVER_PASSWORD }}
-      #       password: ${{ secrets.DEV_SERVER_PASSWORD }}
-      #       script: |
-      #         echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-      #         docker stop ${{env.CONTAINER_NAME}} && docker rm ${{env.CONTAINER_NAME}} || true
-      #         docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{env.IMAGE_TAG}}
