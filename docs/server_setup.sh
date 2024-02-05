@@ -7,4 +7,4 @@ gha
 cat gha.pub >> ~/.ssh/authorized_keys
 
 # copy paste the key in gha
-cat gha / nano gha
+cat gha

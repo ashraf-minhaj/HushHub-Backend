@@ -41,8 +41,7 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         run: docker push ${{env.IMAGE_TAG}}
-
-      # new method
+        
       - name: Write SSH keys
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
