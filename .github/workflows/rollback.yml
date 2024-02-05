@@ -14,11 +14,13 @@ jobs:
   rollback:
     name: Unit Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
     steps:      
       - name: Checkout
         uses: actions/checkout@v2
       - name: check last sha
-        run: echo "PREVIOUS_SHA=$(git rev-parse HEAD^)"
+        run: |
+          # echo "PREVIOUS_SHA=$(git rev-parse HEAD^)"
+          echo "$GITHUB_CONTEXT"| jq '.event.commits[].id' | tail -2 | head -1 |sed 's/\"//g'
+          env:
+            GITHUB_CONTEXT: ${{ toJson(github) }}
+        
