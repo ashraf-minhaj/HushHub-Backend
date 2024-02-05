@@ -21,6 +21,6 @@ jobs:
         run: |
           # echo "PREVIOUS_SHA=$(git rev-parse HEAD^)"
           echo "$GITHUB_CONTEXT"| jq '.event.commits[].id' | tail -2 | head -1 |sed 's/\"//g'
-          env:
-            GITHUB_CONTEXT: ${{ toJson(github) }}
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
         
