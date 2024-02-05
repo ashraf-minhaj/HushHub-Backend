@@ -1,0 +1,26 @@
+##################################################
+# roll back to previous stable state
+# use the previous image (ref: git main last sha)
+# 
+# author: ashraf minhaj
+# mail  : ashraf_minhaj@yahoo.com
+##################################################
+
+name: 'rollback'
+# on: workflow_dispatch
+on: push
+
+jobs:
+  rollback:
+    name: rollback to prev sha
+    runs-on: ubuntu-latest
+    steps:      
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: check last sha
+        run: |
+          # echo "PREVIOUS_SHA=$(git rev-parse HEAD^)"
+          echo "$GITHUB_CONTEXT"| jq '.event.commits[].id' | tail -2 | head -1 |sed 's/\"//g'
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        
