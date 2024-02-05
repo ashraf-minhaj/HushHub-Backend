@@ -5,11 +5,10 @@ on: push
 
 env:
   IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/hushhub-backend:${{ github.sha }}
-  # IMAGE_TAG: bro/hushhub-backend:${{ github.sha }}
   CONTAINER_NAME: "hushhub-backend"
-  # CONTAINER_PORT: 5000
-  # HOST_PORT: 5000
-  # ENV_FILE: .env.stg
+  CONTAINER_PORT: 8080
+  HOST_PORT: 8080
+  ENV_FILE: .env
 
 jobs:
   check_msg:
@@ -37,11 +36,11 @@ jobs:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # - name: Build Docker Image
-      #   run: cd app ; docker build -t ${{env.IMAGE_TAG}} .
+      - name: Build Docker Image
+        run: cd app ; docker build -t ${{env.IMAGE_TAG}} .
 
-      # - name: Push Docker Image to Docker Hub
-      #   run: docker push ${{env.IMAGE_TAG}}
+      - name: Push Docker Image to Docker Hub
+        run: docker push ${{env.IMAGE_TAG}}
 
       # new method
       - name: Write SSH keys
@@ -54,26 +53,18 @@ jobs:
         run: |
           echo "${{ secrets.DEV_ENV_VARS }}" > .env
       
-      - name: Deploy project
+      - name: provision environment variable file
         run: |
           echo "send the .env file to the server first"
           scp .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
-          ssh ec2-user@${{ secrets.DEV_SERVER_IP }} 'echo fromgha > y.txt'
-          # ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker ps || true'
+          ssh ec2-user@${{ secrets.DEV_SERVER_IP }} 'echo fromgha > fromgha.txt'
 
-      # - name: Connect to droplet via SSH
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.DEV_SERVER_IP }}
-      #     username: ec2-user
-      #     key: ${{ secrets.SSH_KEY }}
-      #     passphrase: 12345
-      #     # password: 12345
-      #     script: |
-      #       ls -a
-          # echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-          # docker stop ${{env.CONTAINER_NAME}} && docker rm ${{env.CONTAINER_NAME}} || true
-          # docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{env.IMAGE_TAG}}
+      - name: run container
+        run: |
+          ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} && /
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin && /
+          docker stop ${{env.CONTAINER_NAME}} && docker rm ${{env.CONTAINER_NAME}} && /
+          docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{env.IMAGE_TAG}} 
 
         
       
