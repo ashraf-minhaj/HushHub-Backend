@@ -1,2 +1,111 @@
-# read commit message. 'deploy stg'
-# deploy to stg env
+#########################################
+# deploy to dev/stg environment
+# on -
+#   1. push to main (because it was the task)
+#   2. any feature branch with commit message - 'deploy-dev'
+#   3. PR to stage
+# 
+# author: ashraf minhaj
+# mail  : ashraf_minhaj@yahoo.com
+#########################################
+
+name: deploy dev
+on:
+  push:
+    branches:
+      - "*"
+      - "*/*"
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - "stage" 
+  issue_comment:                                     
+    types: [created]
+
+
+# only one will run at a time
+concurrency:                # limit the number of concurrently running workflows
+  group: dev-stg
+  cancel-in-progress: true  # new workflow run will cancel the currently running one
+
+env:
+  IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/hushhub-backend:${{ github.sha }}
+  CONTAINER_NAME: "hushhub-backend"
+  CONTAINER_PORT: 8080
+  HOST_PORT: 8080
+  ENV_FILE: .env
+
+jobs:
+  check_commit_msg:
+    runs-on: [ ubuntu-latest ]
+    outputs:
+      deploy_devstg: ${{ steps.msg_checker.outputs.deploy_devstg }}
+    steps:
+      - name: check commit message
+        id: msg_checker
+        if: contains(github.event.head_commit.message, 'deploy-dev')
+        run: |
+          echo "deploy_devstg=true" >> "$GITHUB_OUTPUT"
+  
+  check_pr_comment:                                                       # only if it's a pr
+    if: ${{ github.event.issue.pull_request }}
+    runs-on: [ ubuntu-latest ]
+    permissions: write-all
+    outputs:
+      deploy_devstg: ${{ steps.comment_checker.outputs.deploy_devstg }}
+    steps:
+      - name: check pr message
+        id: comment_checker
+        if: contains(github.event.comment.body, '/test') 
+        run: |
+          echo "deploy_devstg=true" >> "$GITHUB_OUTPUT"
+      - name: acknowlodgement 
+        if: always() && success() $$ ( "${{ steps.comment_checker.outputs.deploy_devstg }}" == "true")
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Deploying app to dev or stage environment!! :rocket:
+          reactions: rocket
+
+  deploy_dev:
+    if: contains(needs.*.outputs.deploy_devstg, 'true')
+    needs: [check_commit_msg, check_pr_comment]
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker Image
+        run: cd app ; docker build -t ${{env.IMAGE_TAG}} .
+
+      - name: Push Docker Image to Docker Hub
+        run: docker push ${{env.IMAGE_TAG}}
+        
+      - name: Write SSH keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.DEV_SSH_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DEV_SERVER_IP }} > ~/.ssh/known_hosts
+      
+      - name: Download the .env file
+        run: |
+          echo "${{ secrets.DEV_ENV_VARS }}" > .env
+      
+      - name: provision environment variable file
+        run: |
+          echo "send the .env file to the server first"
+          scp .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
+          ssh ec2-user@${{ secrets.DEV_SERVER_IP }} 'echo fromgha > fromgha.txt'
+
+      - name: run container
+        run: |
+          ssh ec2-user@${{ secrets.DEV_SERVER_IP }} \
+            'echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin && \
+            sudo docker stop ${{env.CONTAINER_NAME}} || true && \
+            sudo docker rm ${{env.CONTAINER_NAME}} || true && \
+            sudo docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{env.IMAGE_TAG}}'
