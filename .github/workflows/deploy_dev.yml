@@ -50,23 +50,18 @@ jobs:
           echo "${{ secrets.DEV_SSH_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H 65.0.86.161 > ~/.ssh/known_hosts
       
-      # - name: Set permissions for private key
-      #   run: |
-      #     echo "${{ secrets.DEV_SSH_KEY }}" > ssh_key.pem
-      #     chmod 600 ssh_key.pem
-      #     # touch $HOME/.ssh/known_hosts
-
-      # - name: Download the .env file
-      #   run: |
-      #     echo "${{ secrets.DEV_ENV_VARS }}" > .env
+      - name: Download the .env file
+        run: |
+          echo "${{ secrets.DEV_ENV_VARS }}" > .env
       
-      # - name: Deploy project
-      #   run: |
-      #     echo "send the .env file to the server first"
-      #     chmod 600 ssh_key.pem
-      #     # scp -i ssh_key.pem .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
-      #     ssh -o StrictHostKeyChecking=no -v ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo touch y.txt'
-      #     # ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker stop cddemo || true'
+      - name: Deploy project
+        run: |
+          echo "send the .env file to the server first"
+          # chmod 600 ssh_key.pem
+          scp .env ec2-user@65.0.86.161:~/
+          # scp -i ssh_key.pem .env ec2-user@${{ secrets.DEV_SERVER_IP }}:~/
+          # ssh -o StrictHostKeyChecking=no -v ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo touch y.txt'
+          # ssh -i ssh_key.pem ec2-user@${{ secrets.DEV_SERVER_IP }} 'sudo docker stop cddemo || true'
 
       # - name: Connect to droplet via SSH
       #   uses: appleboy/ssh-action@master
