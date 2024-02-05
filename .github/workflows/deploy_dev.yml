@@ -48,7 +48,7 @@ jobs:
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.DEV_SSH_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H minhaj@dev.com > ~/.ssh/known_hosts
+          ssh-keyscan -H 65.0.86.161 > ~/.ssh/known_hosts
       
       # - name: Set permissions for private key
       #   run: |
