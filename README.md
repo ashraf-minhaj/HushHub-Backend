@@ -8,7 +8,6 @@
 ![stage](https://github.com/ashraf-minhaj/hushhub-backend/actions/workflows/deploy_dev.yml/badge.svg)&nbsp;
 ![](https://img.shields.io/badge/License-MIT%20License-red?style=plastic&logo=mit)&nbsp;
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ashraf-minhaj_HushHub-Backend&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=ashraf-minhaj_HushHub-Backend)&nbsp;
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ashraf-minhaj_HushHub-Backend&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=ashraf-minhaj_HushHub-Backend)&nbsp;
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ashraf-minhaj_HushHub-Backend&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=ashraf-minhaj_pydonitor)&nbsp;
 <!-- ![](https://img.shields.io/badge/Platform-Linux-black?labelColor=black&style=plastic&logo=linux)&nbsp; -->
 ![](https://img.shields.io/badge/Python-3.10-blue?style=plastic&logo=python)&nbsp;
