@@ -1,7 +1,32 @@
-# read commit message. 'deploy dev'
-# deploy to stg env
+#########################################
+# deploy to dev/stg environment
+# on -
+#   1. push to main (because it was the task)
+#   2. any feature branch with commit message - 'deploy-dev'
+#   3. PR to stage
+# 
+# author: ashraf minhaj
+# mail  : ashraf_minhaj@yahoo.com
+#########################################
+
 name: deploy dev
-on: push
+on:
+  push:
+    branches:
+      - "*"
+      - "*/*"
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - "stage" 
+  issue_comment:                                     
+    types: [created]
+
+
+# only one will run at a time
+concurrency:                # limit the number of concurrently running workflows
+  group: dev-stg
+  cancel-in-progress: true  # new workflow run will cancel the currently running one
 
 env:
   IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/hushhub-backend:${{ github.sha }}
@@ -11,21 +36,39 @@ env:
   ENV_FILE: .env
 
 jobs:
-  check_msg:
+  check_commit_msg:
     runs-on: [ ubuntu-latest ]
     outputs:
-      run_next: ${{ steps.msg_checker.outputs.run_next }}
+      deploy_devstg: ${{ steps.msg_checker.outputs.deploy_devstg }}
     steps:
       - name: check commit message
         id: msg_checker
         if: contains(github.event.head_commit.message, 'deploy-dev')
         run: |
-          echo "run_next=true" >> "$GITHUB_OUTPUT"
+          echo "deploy_devstg=true" >> "$GITHUB_OUTPUT"
+  
+  check_pr_comment:
+    runs-on: [ ubuntu-latest ]
+    permissions: write-all
+    outputs:
+      deploy_devstg: ${{ steps.comment_checker.outputs.deploy_devstg }}
+    steps:
+      - name: check pr message
+        id: comment_checker
+        if: contains(github.event.comment.body, '/test') 
+        run: |
+          echo "deploy_devstg=true" >> "$GITHUB_OUTPUT"
+      - name: acknowlodgement 
+        if: always() && success() $$ ( "${{ steps.comment_checker.outputs.deploy_devstg }}" == "true")
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Deploying app to dev or stage environment!! :rocket:
+          reactions: rocket
 
   deploy_dev:
-    # if: ${{ always() && contains(join(needs.*.result, ','), 'ok') }}
-    if: contains(needs.check_msg.outputs.run_next, 'true')
-    needs: check_msg
+    if: contains(needs.*.outputs.deploy_devstg, 'true')
+    needs: [check_commit_msg, check_pr_comment]
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout
