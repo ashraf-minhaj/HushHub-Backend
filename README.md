@@ -36,7 +36,7 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
     - [x] Unit Test
     - [x] Build Image
 
-- [ ] Deploy to dev env from feature branch 
+- [x] Deploy to dev env from feature branch 
     - [x] run dev deployment workflow by `commit-msg`. commit with `deploy-dev` comment
         <!-- - [ ] run workflow by `pr-comment` -->
 - [x] on CD deploy image to dockerHub
