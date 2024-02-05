@@ -55,6 +55,10 @@ def connect_to_mongodb():
 # get database collection
 mycol = connect_to_mongodb()
 
+@app.route('/', methods=['GET'])
+def home():
+    """ home. """
+    return jsonify({'messages': 'I store secret messages and broadcast them, secretly.'})
 
 @app.route('/post_message', methods=['POST'])
 def post_message():
