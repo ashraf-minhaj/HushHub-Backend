@@ -4,11 +4,19 @@
 *Share thoughts wihtout letting them know who you are*
 ![banner](docs/banner.png)
 
+![main workflow](https://github.com/ashraf-minhaj/hushhub-backend/actions/workflows/deploy_prod.yml/badge.svg)&nbsp;
+![stage](https://github.com/ashraf-minhaj/hushhub-backend/actions/workflows/deploy_dev.yml/badge.svg)&nbsp;
 ![](https://img.shields.io/badge/License-MIT%20License-red?style=plastic&logo=mit)&nbsp;
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ashraf-minhaj_HushHub-Backend&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=ashraf-minhaj_HushHub-Backend)&nbsp;
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ashraf-minhaj_HushHub-Backend&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=ashraf-minhaj_pydonitor)&nbsp;
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ashraf-minhaj_pydonitor&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=ashraf-minhaj_pydonitor)&nbsp;
 <!-- ![](https://img.shields.io/badge/Platform-Linux-black?labelColor=black&style=plastic&logo=linux)&nbsp; -->
 ![](https://img.shields.io/badge/Python-3.10-blue?style=plastic&logo=python)&nbsp;
 ![](https://img.shields.io/badge/docker--blue?style=plastic&logo=docker)&nbsp;
-![](https://img.shields.io/badge/Docker%20Compose-3.8-blue?style=plastic&logo=docker)&nbsp;
+![](https://img.shields.io/badge/GitHub-Actions-blue?style=plastic&logo=githubactions)&nbsp;
+https://img.shields.io/badge/SonarQube-SonarCloud-orange?style=plastic&logo=sonarcloud
+
+
 </div>
 
 see [demo snap](#demo)
@@ -37,10 +45,10 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
     - [x] Build Image
 
 - [x] Deploy to dev env from feature branch 
-    - [x] run dev deployment workflow by `commit-msg`. commit with `deploy-dev` comment
-        <!-- - [ ] run workflow by `pr-comment` -->
+    - [x] run dev deployment workflow by **commit-msg**. commit with `deploy-dev` message
+    - [x] run workflow by **pr-comment**. comment on pr - `/deploy-dev`
 - [x] on CD deploy image to dockerHub
-- [ ] Implement CD from `main` branch to both the envs (dev, prod)
+- [x] Implement CD from `main` branch to both the envs (dev, prod)
 - [ ] Implement a simple rollback job that we use the last successful image to do the deployment 
 - [ ] Calculate disaster recovery time of the CI/CD
 - [ ] Notify on failed deployments with details in the email
