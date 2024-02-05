@@ -39,7 +39,7 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
 - [ ] Deploy to dev env from feature branch 
     - [x] run dev deployment workflow by `commit-msg`. commit with `deploy-dev` comment
         <!-- - [ ] run workflow by `pr-comment` -->
-- [ ] on CD deploy image to dockerHub
+- [x] on CD deploy image to dockerHub
 - [ ] Implement CD from `main` branch to both the envs (dev, prod)
 - [ ] Implement a simple rollback job that we use the last successful image to do the deployment 
 - [ ] Calculate disaster recovery time of the CI/CD
