@@ -1,0 +1,24 @@
+##################################################
+# roll back to previous stable state
+# use the previous image (ref: git main last sha)
+# 
+# author: ashraf minhaj
+# mail  : ashraf_minhaj@yahoo.com
+##################################################
+
+name: 'rollback'
+# on: workflow_dispatch
+on: push
+
+jobs:
+  rollback:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:      
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: check last sha
+        run: echo "PREVIOUS_SHA=$(git rev-parse HEAD^)"
