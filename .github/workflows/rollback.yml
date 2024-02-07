@@ -9,10 +9,6 @@
 name: 'rollback'
 
 on: workflow_dispatch
-    # inputs:
-    #   environment:
-    #     description: 'Specify target environment'
-    #     required: false
 
 jobs:
   rollback:
@@ -26,9 +22,10 @@ jobs:
       - name: Get commit SHAs
         id: get_commit_shas
         run: |
-          CURRENT_SHA=$(git rev-parse HEAD)
-          PREVIOUS_SHA=$(git rev-parse HEAD^)
-          echo "::set-output name=current_sha::${CURRENT_SHA}"
-          echo "::set-output name=previous_sha::${PREVIOUS_SHA}"
+          # CURRENT_SHA=$(git rev-parse HEAD)
+          # PREVIOUS_SHA=$(git rev-parse HEAD^)
+          # echo "::set-output name=current_sha::${CURRENT_SHA}"
+          # echo "::set-output name=previous_sha::${PREVIOUS_SHA}"
+          echo "$GITHUB_CONTEXT"| jq '.event.commits[].id' | tail -2 | head -1 |sed 's/\"//g'
     
         
