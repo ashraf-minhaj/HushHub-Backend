@@ -7,8 +7,12 @@
 ##################################################
 
 name: 'rollback'
-# on: workflow_dispatch
-on: push
+
+on: workflow_dispatch
+    # inputs:
+    #   environment:
+    #     description: 'Specify target environment'
+    #     required: false
 
 jobs:
   rollback:
@@ -17,10 +21,14 @@ jobs:
     steps:      
       - name: Checkout
         uses: actions/checkout@v2
-      - name: check last sha
+        with:
+          ref: 'main'
+      - name: Get commit SHAs
+        id: get_commit_shas
         run: |
-          # echo "PREVIOUS_SHA=$(git rev-parse HEAD^)"
-          echo "$GITHUB_CONTEXT"| jq '.event.commits[].id' | tail -2 | head -1 |sed 's/\"//g'
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+          CURRENT_SHA=$(git rev-parse HEAD)
+          PREVIOUS_SHA=$(git rev-parse HEAD^)
+          echo "::set-output name=current_sha::${CURRENT_SHA}"
+          echo "::set-output name=previous_sha::${PREVIOUS_SHA}"
+    
         
