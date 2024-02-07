@@ -8,13 +8,13 @@
 ![stage](https://github.com/ashraf-minhaj/hushhub-backend/actions/workflows/deploy_dev.yml/badge.svg)&nbsp;
 ![](https://img.shields.io/badge/License-MIT%20License-red?style=plastic&logo=mit)&nbsp;
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ashraf-minhaj_HushHub-Backend&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=ashraf-minhaj_HushHub-Backend)&nbsp;
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ashraf-minhaj_HushHub-Backend&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=ashraf-minhaj_pydonitor)&nbsp;
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ashraf-minhaj_HushHub-Backend&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=ashraf-minhaj_HushHub-Backend)&nbsp;
 <!-- ![](https://img.shields.io/badge/Platform-Linux-black?labelColor=black&style=plastic&logo=linux)&nbsp; -->
 ![](https://img.shields.io/badge/Python-3.10-blue?style=plastic&logo=python)&nbsp;
 ![](https://img.shields.io/badge/docker--blue?style=plastic&logo=docker)&nbsp;
 ![](https://img.shields.io/badge/GitHub-Actions-blue?style=plastic&logo=githubactions)&nbsp;
 ![](https://img.shields.io/badge/SonarQube-SonarCloud-orange?style=plastic&logo=sonarcloud)&nbsp;
-
+![](https://img.shields.io/badge/Ansible--white?style=plastic&logo=Ansible)&nbsp;
 
 </div>
 
