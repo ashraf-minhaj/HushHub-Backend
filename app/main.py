@@ -94,7 +94,7 @@ def health():
 def info():
     """ shows information about the app """
     return jsonify({'success': True,
-                    'version': '1.0', 
+                    'version': '1.2', 
                     'message': 'bro, this works on your machine too'
                     }), 200
 
