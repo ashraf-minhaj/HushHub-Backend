@@ -10,22 +10,49 @@ name: 'rollback'
 
 on: workflow_dispatch
 
+env:
+  CONTAINER_NAME: "hushhub-backend"
+  CONTAINER_PORT: 8080
+  HOST_PORT: 8080
+  ENV_FILE: .env
+
 jobs:
+  get_prev_sha:
+    name: get previous sha of main
+    runs-on: ubuntu-latest
+    outputs:
+      prev_sha: ${{ steps.prev_sha.outputs.prev_sha }}
+    steps:      
+      - name: Get last commit SHA
+        id: prev_sha
+        run: |
+          echo "prev_sha=$(git rev-parse main~1)" >> "$GITHUB_OUTPUT"
+  
   rollback:
     name: rollback to prev sha
+    needs: get_prev_sha
     runs-on: ubuntu-latest
-    steps:      
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: 'main'
-      - name: Get commit SHAs
-        id: get_commit_shas
+    steps:
+      - name: Write SSH keys
         run: |
-          # CURRENT_SHA=$(git rev-parse HEAD)
-          # PREVIOUS_SHA=$(git rev-parse HEAD^)
-          # echo "::set-output name=current_sha::${CURRENT_SHA}"
-          # echo "::set-output name=previous_sha::${PREVIOUS_SHA}"
-          echo "$GITHUB_CONTEXT"| jq '.event.commits[].id' | tail -2 | head -1 |sed 's/\"//g'
-    
-        
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.PROD_SERVER_IP }} > ~/.ssh/known_hosts
+      
+      - name: Download the .env file
+        run: |
+          echo "${{ secrets.PROD_ENV_VARS }}" > .env
+      
+      - name: provision environment variable file
+        run: |
+          echo "send the .env file to the server first"
+          scp .env ec2-user@${{ secrets.PROD_SERVER_IP }}:~/
+          ssh ec2-user@${{ secrets.PROD_SERVER_IP }} 'echo ${{ needs.get_prev_sha.outputs.prev_sha }} > rollbacksha.txt'
+
+      - name: run container
+        run: |
+          ssh ec2-user@${{ secrets.PROD_SERVER_IP }} \
+            'echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin && \
+            sudo docker stop ${{env.CONTAINER_NAME}} || true && \
+            sudo docker rm ${{env.CONTAINER_NAME}} || true && \
+            sudo docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{ secrets.DOCKERHUB_USERNAME }}/hushhub-backend:${{ needs.get_prev_sha.outputs.prev_sha }}"'
