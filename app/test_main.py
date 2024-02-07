@@ -27,7 +27,7 @@ class TestApp(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data['success'])
-        self.assertEqual(data['version'], '1.0')
+        self.assertEqual(data['version'], '1.2')
         self.assertEqual(data['message'], 'bro, this works on your machine too')
 
 if __name__ == '__main__':
