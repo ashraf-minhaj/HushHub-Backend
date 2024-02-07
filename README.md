@@ -33,6 +33,8 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
 - [x] Docker tool to wrap complex docker commands in a simpler format
 
 ### CI/CD Features
+- [x] Setup Production and Dev Environment servers **using Ansible**
+
 - **On PR**:
     - [x] Linter
     - [x] Unit Test
@@ -48,13 +50,12 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
     - [x] run workflow by **pr-comment**. comment on pr - `/deploy-dev`
 - [x] on CD deploy image to dockerHub
 - [x] Implement CD from `main` branch to both the envs (dev, prod)
-- [ ] Implement a simple rollback job that we use the last successful image to do the deployment 
+- [x] Implement a simple rollback job that we use the last successful image to do the deployment 
 - [ ] Calculate disaster recovery time of the CI/CD
 - [ ] Notify on failed deployments with details in the email
 
-- [ ] Setup Production and Dev Environment servers
-- [ ] Scope of improvements
-- [ ] Bonus: Implement Integration Test on post deployment on real environment
+<!-- - [ ] Scope of improvements
+- [ ] Bonus: Implement Integration Test on post deployment on real environment -->
 
 
 ### Improvement scopes (future considerations)

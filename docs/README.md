@@ -1,9 +1,9 @@
 ## for github actions 
 
-1. generate ssh key `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`
+1. generate ssh key `ssh-keygen -t rsa -b 4096 -C "min@dev.com"`
 2. directory `gha`
 3. Adding the Public Key to authorized_keys `cat gha.pub >> ~/.ssh/authorized_keys`
-4. Adding the private key to your repository’s secrets `cat ~/.ssh/gha`
+4. Adding the private key to your repository’s secrets `cat gha`
  
 ## 🚀🚀 setup ansible and ssh 🚀🚀
 
