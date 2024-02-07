@@ -1,0 +1,17 @@
+---
+- name: Setup Docker on Servers
+  hosts: devstage, production
+  become: true
+
+  tasks:
+  - name: Install docker
+    shell: |
+      sudo yum update -y
+      sudo yum install docker -y
+    when: ansible_distribution == 'Amazon'  # Adjust based on your target OS
+
+  - name: Start Docker service
+    service:
+      name: docker
+      state: started
+      enabled: yes
