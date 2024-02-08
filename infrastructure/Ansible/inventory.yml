@@ -5,5 +5,5 @@ servers:
       ansible_host: 3.6.87.76
       ansible_user: ec2-user
     production:
-      ansible_host: 13.234.77.110
+      ansible_host: 3.110.160.249
       ansible_user: ec2-user
