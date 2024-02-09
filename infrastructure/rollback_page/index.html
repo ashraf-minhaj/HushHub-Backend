@@ -64,7 +64,6 @@
         </tr>
     </table>
     <py-script>
-        <!-- import requests -->
         from pyodide.http import pyfetch
         import asyncio
         from js import console
@@ -78,14 +77,16 @@
         pull_requests = []
 
         response = await pyfetch('https://api.github.com/repos/ashraf-minhaj/HushHub-Backend/pulls?state=closed&base=main', method="GET")
-        pull_requests = f'{await response.json()}'
-        console.log(pull_requests)
+        pull_requests = await response.json()
+        console.log(f'{pull_requests}')
 
-        <!-- for pr in pull_requests:
+        for pr in pull_requests:
             hashes = pr["merge_commit_sha"]
             commit_hashes.append(hashes)
+        
+        console.log(f'{commit_hashes}')
 
-        for i, pr in enumerate(pull_requests):
+        <!-- for i, pr in enumerate(pull_requests):
             document.write('<tr>')
             document.write('<td>' + (i + 1) + '</td>')
             document.write('<td>' + pr["title"] + '</td>')
