@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HushHub Rollback Helper Table</title>
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #004080;
+        }
+
+        p {
+            color: #cc0000;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #007acc;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #e6e6e6;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>HushHub Backend Rollback Helper Table</h1>
+    <p>In case of emergency, copy the desired SHA.</p>
+    <table>
+        <tr>
+            <th>PR Number</th>
+            <th>Title</th>
+            <th>Merge Commit SHA</th>
+            <th>URL</th>
+        </tr>
+    </table>
+    <py-script>
+        <!-- import requests -->
+        from pyodide.http import pyfetch
+        import asyncio
+        from js import console
+
+        repo_owner = 'ashraf-minhaj'
+        repo_name = 'HushHub-Backend'
+        base_branch = 'main'
+
+        params = {'state': 'closed', 'base': base_branch}
+        commit_hashes = []
+        pull_requests = []
+
+        response = await pyfetch('https://api.github.com/repos/ashraf-minhaj/HushHub-Backend/pulls?state=closed&base=main', method="GET")
+        pull_requests = f'{await response.json()}'
+        console.log(pull_requests)
+
+        <!-- for pr in pull_requests:
+            hashes = pr["merge_commit_sha"]
+            commit_hashes.append(hashes)
+
+        for i, pr in enumerate(pull_requests):
+            document.write('<tr>')
+            document.write('<td>' + (i + 1) + '</td>')
+            document.write('<td>' + pr["title"] + '</td>')
+            document.write('<td>' + commit_hashes[i] + '</td>')
+            document.write('<td><a href="' + pr["html_url"] + '" target="_blank">' + pr["html_url"] + '</a></td>')
+            document.write('</tr>') -->
+    </py-script>
+</body>
+</html>
