@@ -51,6 +51,7 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
 - [x] on CD deploy image to dockerHub
 - [x] Implement CD from `main` branch to both the envs (dev, prod)
 - [x] Implement a simple rollback job that we use the last successful image to do the deployment 
+- [x] Implement a rollback table with PRs and SHAs
 - [ ] Calculate disaster recovery time of the CI/CD
 - [ ] Notify on failed deployments with details in the email
 
@@ -62,7 +63,12 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
 - application health check monitoring and notification system
 (more to come)
 
-### Demo
+### Rollback Table
+In case of unwanted situations copy the hash from [sha table](https://ashraf-minhaj.github.io/HushHub-Backend) and run rollback worlfow
+![rollback](docs/rollback-table.png)
+
+
+## Demo
 ![demo](docs/demo.png)
 
 ## setup local environment 

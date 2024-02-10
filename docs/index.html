@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HushHub Rollback Helper Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #004080;
+        }
+
+        p {
+            color: #cc0000;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #007acc;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #e6e6e6;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>HushHub Backend Rollback Helper Table</h1>
+    <p>In case of emergency, copy the desired SHA.</p>
+    <table id="pullRequestsTable">
+        <caption>This table shows the latest closed pull requests for HushHub Backend.</caption>
+        <tr>
+            <th>PR Number</th>
+            <th>Title</th>
+            <th>Merge Commit SHA</th>
+            <th>URL</th>
+        </tr>
+    </table>
+
+    <script>
+        const repoOwner = 'ashraf-minhaj';
+        const repoName = 'HushHub-Backend';
+        const baseBranch = 'main';
+
+        const params = { state: 'closed', base: baseBranch };
+
+        async function fetchData() {
+            const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/pulls?state=closed&base=${baseBranch}`);
+            const pullRequests = await response.json();
+            return pullRequests.slice(0, 10);
+        }
+
+        async function renderTable() {
+            try {
+                const pullRequests = await fetchData();
+                const table = document.getElementById('pullRequestsTable');
+
+                pullRequests.forEach((pr, index) => {
+                    const row = table.insertRow();
+                    const cell1 = row.insertCell(0);
+                    const cell2 = row.insertCell(1);
+                    const cell3 = row.insertCell(2);
+                    const cell4 = row.insertCell(3);
+
+                    cell1.textContent = index + 1;
+                    cell2.textContent = pr.title;
+                    cell3.textContent = pr.merge_commit_sha;
+                    cell4.innerHTML = `<a href="${pr.html_url}" target="_blank">${pr.html_url}</a>`;
+                });
+            } catch (error) {
+                console.error(`Error rendering table: ${error}`);
+                const errorMessage = document.createElement('p');
+                errorMessage.style.color = 'red';
+                errorMessage.textContent = 'Error rendering table';
+                document.body.appendChild(errorMessage);
+            }
+        }
+
+        renderTable();
+    </script>
+</body>
+</html>
