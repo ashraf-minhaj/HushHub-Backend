@@ -55,6 +55,7 @@
     <h1>HushHub Backend Rollback Helper Table</h1>
     <p>In case of emergency, copy the desired SHA.</p>
     <table id="pullRequestsTable">
+        <caption>This table shows the latest closed pull requests for HushHub Backend.</caption>
         <tr>
             <th>PR Number</th>
             <th>Title</th>
@@ -72,9 +73,8 @@
 
         async function fetchData() {
             const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/pulls?state=closed&base=${baseBranch}`);
-            // return await response.json();
             const pullRequests = await response.json();
-            return pullRequests.slice(0, 10); // Get only the last 10 pull requests
+            return pullRequests.slice(0, 10);
         }
 
         async function renderTable() {
