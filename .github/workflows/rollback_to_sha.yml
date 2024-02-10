@@ -1,0 +1,51 @@
+##################################################
+# roll back to previous stable state
+# use the previous image (ref: input git main sha)
+# 
+# author: ashraf minhaj
+# mail  : ashraf_minhaj@yahoo.com
+##################################################
+
+name: 'rollback to sha'
+
+on: 
+  workflow_dispatch:
+    inputs:
+      sha:
+        required: true
+        type: string
+
+env:
+  CONTAINER_NAME: "hushhub-backend"
+  CONTAINER_PORT: 8080
+  HOST_PORT: 8080
+  ENV_FILE: .env
+
+jobs:
+  rollback:
+    name: rollback to a specific sha
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write SSH keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.PROD_SERVER_IP }} > ~/.ssh/known_hosts
+      
+      - name: Download the .env file
+        run: |
+          echo "${{ secrets.PROD_ENV_VARS }}" > .env
+      
+      - name: provision environment variable file
+        run: |
+          echo "send the .env file to the server first"
+          scp .env ec2-user@${{ secrets.PROD_SERVER_IP }}:~/
+          ssh ec2-user@${{ secrets.PROD_SERVER_IP }} 'echo ${{ needs.get_prev_sha.outputs.prev_sha }} > rollbacksha.txt'
+
+      - name: run container
+        run: |
+          ssh ec2-user@${{ secrets.PROD_SERVER_IP }} \
+            'echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login --username=${{ secrets.DOCKERHUB_USERNAME }} --password-stdin && \
+            sudo docker stop ${{env.CONTAINER_NAME}} || true && \
+            sudo docker rm ${{env.CONTAINER_NAME}} || true && \
+            sudo docker run --env-file ${{env.ENV_FILE}} -d --name ${{env.CONTAINER_NAME}} -p ${{env.HOST_PORT}}:${{env.CONTAINER_PORT}} --restart always ${{ secrets.DOCKERHUB_USERNAME }}/hushhub-backend:${{ github.event.inputs.sha }}'

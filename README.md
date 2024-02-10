@@ -64,7 +64,7 @@ see [HushHub Frontend](https://github.com/ashraf-minhaj/HushHub-Frontend/)
 (more to come)
 
 ### Rollback Table
-In case of unwanted situations copy the hash from this url and run rollback worlfow
+In case of unwanted situations copy the hash from [sha table](https://ashraf-minhaj.github.io/HushHub-Backend) and run rollback worlfow
 ![rollback](docs/rollback-table.png)
 
 
